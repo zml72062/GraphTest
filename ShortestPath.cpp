@@ -1,4 +1,4 @@
-#include "ShortestPath.hpp"
+#include "header/ShortestPath.hpp"
 #include <limits.h>
 #include <set>
 #include <queue>
@@ -186,7 +186,7 @@ distanceMatrix AdjacencyMatrix(const Graph &_graph)
 distanceMatrix Floyd(const Graph &_graph)
 {
     std::size_t V = _graph.numberOfNodes();
-    vector<vector<int>> ans = AdjacencyMatrix(_graph).second, new_ans = ans;
+    vector<vector<int>> ans = AdjacencyMatrix(_graph).second;
     for (auto k = 0; k < V; ++k)
     {
         for (auto i = 0; i < V; ++i)
@@ -195,20 +195,19 @@ distanceMatrix Floyd(const Graph &_graph)
             {
                 if (ans[i][k] == INT_MAX || ans[k][j] == INT_MAX)
                 {
-                    new_ans[i][j] = ans[i][j];
+                    ans[i][j] = ans[i][j];
                 }
                 else
                 {
-                    new_ans[i][j] = std::min(ans[i][j], ans[i][k] + ans[k][j]);
+                    ans[i][j] = std::min(ans[i][j], ans[i][k] + ans[k][j]);
                 }
             }
         }
-        ans = new_ans;
     }
     return std::make_pair(true, ans);
 }
 
-distanceMatrix Johnson(Graph& _graph)
+distanceMatrix Johnson(Graph &_graph)
 {
     _graph.addNode();
     vector<vector<int>> ans;
