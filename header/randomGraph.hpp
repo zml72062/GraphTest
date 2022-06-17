@@ -11,6 +11,31 @@ class randomGraphGenerator
 {
 public:
     randomGraphGenerator(int _numOfVertices, double _power, double _constant, bool _hasNegative) : rng(time(nullptr)), numOfVertices(_numOfVertices), power(_power), constant(_constant), hasNegative(_hasNegative) {}
+    void setNumOfVertices(int _numOfVertices)
+    {
+        numOfVertices = _numOfVertices;
+    }
+    int getNumOfVertices() const { return numOfVertices; }
+    void setPower(double _power)
+    {
+        power = _power;
+    }
+    void setConstant(double _constant)
+    {
+        constant = _constant;
+    }
+    void setHasNegative(bool _hasNegative)
+    {
+        hasNegative = _hasNegative;
+    }
+    void setLowerBound(int _loBound)
+    {
+        loBound = _loBound;
+    }
+    void setUpperBound(int _hiBound)
+    {
+        hiBound = _hiBound;
+    }
     void operator()(Graph &_graph)
     {
         _graph.clear();
@@ -30,10 +55,10 @@ public:
             us.insert(i * numOfVertices + i);
         }
         std::uniform_real_distribution<> number(0, 1);
-        std::uniform_int_distribution<> length(0, 10000);
+        std::uniform_int_distribution<> length(0, hiBound);
         if (hasNegative)
         {
-            length = std::uniform_int_distribution<>(-10000, 10000);
+            length = std::uniform_int_distribution<>(loBound, hiBound);
         }
         for (auto i = 0; i < c; ++i)
         {
@@ -57,5 +82,7 @@ private:
     double power;
     int numOfVertices;
     bool hasNegative;
+    int loBound = -50;
+    int hiBound = 10000;
 };
 #endif
