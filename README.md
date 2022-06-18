@@ -14,9 +14,30 @@ Test for various shortest-path algorithms on graphs.
 |Floyd|$O(V^3)$|适用于负权边, 不可判断负权环|
 |Johnson (采用 Fibonacci 堆的 Dijkstra 算法)|$O(EV+V^2\log V)$|适用于负权边, 可判断负权环|
 
-## 具体实现说明
+## 结果
 
-* `/header` 目录下放置了本依赖的头文件
+通过随机算法生成含 $V$ 个顶点, $$E=\min\left\{CV^\alpha,\frac{V(V-1)}{2}\right\}$$条边的随机非负权图, 然后用四种方法求解全源最短路径问题. 输出形式为一个 $V\times V$ 矩阵, 代表任意两点之间的最短路径长度. 通过 `fc` 命令, 可以发现四种方法得出一致的结果. 下面比较各种算法的时间开销.
+
+在 $\alpha$ 取不同值的情况下 (图中用 `power` 表示 $\alpha$ 值) 测量四种最短路算法的运行时, 如下图所示,
+
+![最短路算法的运行时间](/pics/FourMethods.png)
+
+可以看到, 
+
++ Bellman-Ford 算法的运行时随顶点数 $V$ 的增加, 增长很快; 而且随着幂指数 $\alpha$ 增大时间复杂度更高, 呈 $O(V^{2+\alpha})$ 增长
++ 其他三种算法的运行时在数据规模较小的时候看不出差别.
+
+再在更大规模的数据上对 Dijkstra, Floyd 和 Johnson 算法作测试, 我们得到了下图所示的运行时曲线,
+
+![最短路算法的运行时间_更大数据集](/pics/ThreeMethods.png)
+
+可以看到, 
++ 对于固定的 $V$, Floyd 算法 (红色曲线) 的运行时间随 $\alpha$ 的增加 (从而也就是边数 $E$ 的增加) 只有常数倍的增长, 这是因为其时间复杂度仅和顶点数 $V$ 有关
++ 对于固定的 $V$, Dijkstra (绿色曲线) 和 Johnson 算法 (蓝色曲线) 的运行时间强烈地随 $\alpha$ 增加而增长, 表现出对边数 $E$ 的依赖性
++ Dijkstra 和 Johnson 算法的运行时间仅差常数倍, 因为它们具有相同的时间复杂度
++ 对于稀疏图 ($\alpha$ 较小), Floyd 算法时间上劣于 Dijkstra 或 Johnson 算法, 而对于稠密图 ($\alpha$ 较大), Floyd 算法则有优势
+## 具体实现说明
+* `/header` 目录下放置了本 repository 依赖的头文件
     + `Graph.hpp`: 包含图的类 `Graph`, 其节点下标按照顺序 `0, 1, ..., V-1` 标记, 边由邻接表存储. 提供下列 API,
         * 类 `Graph`
             + `numberOfNodes()` 返回节点数目 $V$
@@ -47,3 +68,11 @@ Test for various shortest-path algorithms on graphs.
     + `shortestPath.hpp`: 包含 "最短路径算法" 的一系列函数. 提供下列内容
         + 类型 `distances`, 它等同于 `std::pair<bool, std::vector<int>>`, 其 `first` 成员代表最短路径是否存在 (若为 `true`, 则存在最短路), 其 `second` 成员代表各节点到指定节点的最短路径长 (如果有的话)
         + 类型 `distanceMatrix`, 它等同于 `std::pair<bool, std::vector<std::vector<int>>>`, 其 `first` 成员代表最短路径是否存在 (若为 `true`, 则存在最短路), 其 `second` 成员代表各节点对之间的最短路径长 (如果有的话)
+        + API
+            * `Dijkstra(const Graph& _graph, int _index)` 用 Dijkstra 算法求非负权图 `_graph` 上单源 `_index` 最短路径问题, 返回一个 `distances` 类型
+            * `Dijkstra(const Graph& _graph)` 用 Dijkstra 算法求非负权图 `_graph` 上全源最短路径问题, 返回一个 `distanceMatrix` 类型
+            * `BellmanFord(const Graph& _graph, int _index)` 用 Bellman-Ford 算法求图 `_graph` 上单源 `_index` 最短路径问题, 返回一个 `distances` 类型
+            * `BellmanFord(const Graph& _graph)` 用 Bellman-Ford 算法求图 `_graph` 上全源最短路径问题, 返回一个 `distanceMatrix` 类型
+            * `Floyd(const Graph& _graph)`  用 Floyd 算法求图 `_graph` 上全源最短路径问题, 返回一个 `distanceMatrix` 类型
+            * `Johnson(Graph& _graph)` 用 Johnson 算法求图 `_graph` 上全源最短路径问题, 返回一个 `distanceMatrix` 类型
+            
