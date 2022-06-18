@@ -16,7 +16,7 @@ Test for various shortest-path algorithms on graphs.
 
 ## 结果
 
-通过随机算法生成含 $V$ 个顶点, $$E=\min\left\{CV^\alpha,\frac{V(V-1)}{2}\right\}$$条边的随机非负权图, 然后用四种方法求解全源最短路径问题. 输出形式为一个 $V\times V$ 矩阵, 代表任意两点之间的最短路径长度. 通过 `fc` 命令, 可以发现四种方法得出一致的结果. 下面比较各种算法的时间开销.
+通过随机算法生成含 $V$ 个顶点, $ E=\min\left\{CV^\alpha,\frac{V(V-1)}{2}\right\}$ 条边的随机非负权图, 然后用四种方法求解全源最短路径问题. 输出形式为一个 $V\times V$ 矩阵, 代表任意两点之间的最短路径长度. 通过 `fc` 命令, 可以发现四种方法得出一致的结果. 下面比较各种算法的时间开销.
 
 在 $\alpha$ 取不同值的情况下 (图中用 `power` 表示 $\alpha$ 值) 测量四种最短路算法的运行时, 如下图所示,
 
@@ -56,7 +56,7 @@ Test for various shortest-path algorithms on graphs.
             + 字段 `end` 表示边的终点下标
             + 字段 `cost` 表示边权
 
-    + `randomGraph.hpp`: 包含 "随机图生成器" 类 `randomGraphGenerator`, 它在 $V$ 个顶点之间随机连 $$E=\min\left\{CV^\alpha,\frac{V(V-1)}{2}\right\}$$条互异的边来构成一个图. 其中 $C$ 和 $\alpha$ 是常数, 并且有 $1\leqslant \alpha\leqslant 2$. 提供下列 API,
+    + `randomGraph.hpp`: 包含 "随机图生成器" 类 `randomGraphGenerator`, 它在 $V$ 个顶点之间随机连 $ E=\min\left\{CV^\alpha,\frac{V(V-1)}{2}\right\}$ 条互异的边来构成一个图. 其中 $C$ 和 $\alpha$ 是常数, 并且有 $1\leqslant \alpha\leqslant 2$. 提供下列 API,
         + 类 `randomGraphGenerator`
             * `setNumOfVertices(int _numOfVertices)` 设置 $V$ 为 `_numOfVertices`
             * `setPower(double _power)` 设置 $\alpha$ 为 `_power`
